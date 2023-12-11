@@ -21,3 +21,19 @@ class TheatreHallSerializer(serializers.ModelSerializer):
     class Meta:
         model = TheatreHall
         fields = ("id", "name", "rows", "seats_in_row", "capacity")
+
+
+class PlaySerializer():
+    pass
+
+
+class PlayListSerializer():
+    pass
+
+
+class PlayDetailSerializer():
+    pass
+
+
+class PlayImageSerializer():
+    pass
