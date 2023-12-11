@@ -135,4 +135,3 @@ class Ticket(models.Model):
                 f"Performance: {self.performance.play.title}\n"
                 f"Theatre Hall: {self.performance.theatre_hall.name}\n"
                 f"Row #{self.row}, Seat #{self.seat}")
-
