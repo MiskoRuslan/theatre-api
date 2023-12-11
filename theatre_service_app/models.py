@@ -40,20 +40,10 @@ class Reservation(models.Model):
         ordering = ["-created_at"]
 
 
-class Ticket(models.Model):
-    row = models.IntegerField()
-    seat = models.IntegerField()
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
-
-    def __str__(self) -> str:
-        return (f"Time: {self.reservation.created_at}\n"
-                f"Row #{self.row}, Seat #{self.seat}")
-
-
 class TheatreHall(models.Model):
     name = models.CharField(max_length=255)
     rows = models.IntegerField()
-    seat_in_row = models.IntegerField()
+    seats_in_row = models.IntegerField()
 
     def __str__(self) -> str:
         return self.name
@@ -68,3 +58,25 @@ class Performance(models.Model):
         return (f"Show time: {self.show_time}\n"
                 f"Play: {self.play.title}\n"
                 f"Theatre hall: {self.theatre_hall.name}")
+
+
+class Ticket(models.Model):
+    row = models.IntegerField()
+    seat = models.IntegerField()
+
+    performance = models.ForeignKey(Performance,
+                                    on_delete=models.SET_NULL,
+                                    null=True, blank=True,
+                                    related_name="tickets")
+
+    reservation = models.ForeignKey(Reservation,
+                                    on_delete=models.SET_NULL,
+                                    null=True, blank=True,
+                                    related_name="tickets")
+
+    def __str__(self) -> str:
+        return (f"Reservation Time: {self.reservation.created_at}\n"
+                f"Performance: {self.performance.play.title}\n"
+                f"Theatre Hall: {self.performance.theatre_hall.name}\n"
+                f"Row #{self.row}, Seat #{self.seat}")
+
