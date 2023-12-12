@@ -9,11 +9,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from theatre_service_app.models import Genre, Actor, TheatreHall, Play, Performance
+from theatre_service_app.models import Genre, Actor, TheatreHall, Play, Performance, Reservation
 from theatre_service_app.permissions import IsAdminOrIfAuthenticatedReadOnly
 from theatre_service_app.serializers import GenreSerializer, ActorSerializer, TheatreHallSerializer, PlayListSerializer, \
     PlayDetailSerializer, PlayImageSerializer, PlaySerializer, PerformanceListSerializer, PerformanceDetailSerializer, \
-    PerformanceSerializer
+    PerformanceSerializer, ReservationSerializer, ReservationListSerializer
 
 
 class GenreViewSet(
@@ -189,3 +189,33 @@ class PerformanceViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class ReservationPagination(PageNumberPagination):
+    page_size = 10
+    max_page_size = 100
+
+
+class ReservationViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    GenericViewSet,
+):
+    queryset = Reservation.objects.prefetch_related(
+        "tickets__performance__play", "tickets__performance__theatre_hall"
+    )
+    serializer_class = ReservationSerializer
+    pagination_class = ReservationPagination
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Reservation.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ReservationListSerializer
+
+        return ReservationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
