@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='play',
             name='image',
-            field=models.ImageField(null=True, upload_to=theatre_service_app.models.movie_image_file_path),
+            field=models.ImageField(null=True, upload_to=theatre_service_app.models.play_image_file_path),
         ),
     ]
