@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 127.0.0.1:8000"
+    environment:
+      - DB_HOST=cornelius.db.elephantsql.com
+      - DB_NAME=wmqnxwli
+      - DB_USER=wmqnxwli
+      - DB_PASSWORD=Qk0Cp53YqfY2Fo1oKbKnR7tqq7lhZqVs
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=wmqnxwli
+      - POSTGRES_USER=wmqnxwli
+      - POSTGRES_PASSWORD=Qk0Cp53YqfY2Fo1oKbKnR7tqq7lhZqVs
