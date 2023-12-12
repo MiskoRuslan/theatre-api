@@ -58,7 +58,6 @@ def sample_performance(**params):
 
 
 def image_upload_url(play_id):
-    """Return URL for recipe image upload"""
     return reverse("theatre:play-upload-image", args=[play_id])
 
 
@@ -82,7 +81,6 @@ class PlayImageUploadTests(TestCase):
         self.play.image.delete()
 
     def test_upload_image_to_play(self):
-        """Test uploading an image to play"""
         url = image_upload_url(self.play.id)
         with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
             img = Image.new("RGB", (10, 10))
@@ -96,7 +94,6 @@ class PlayImageUploadTests(TestCase):
         self.assertTrue(os.path.exists(self.play.image.path))
 
     def test_upload_image_bad_request(self):
-        """Test uploading an invalid image"""
         url = image_upload_url(self.play.id)
         res = self.client.post(url, {"image": "not image"}, format="multipart")
 
